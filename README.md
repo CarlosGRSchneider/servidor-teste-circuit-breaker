@@ -18,16 +18,16 @@ O servidor utiliza a biblioteca **HttpServer** do Java e permite interações at
    - Retorna combinações de nomes de animais com adjetivos.
    - Protegido por um Circuit Breaker configurado para detectar problemas de performance ou falhas no endpoint.
 
-2. **`/hello`**
-   - Retorna a mensagem simples "Hello world!".
+2. **`/calculadora`**
+   - Realiza uma soma entre dois numeros(numero1 e numero2) e devolve o valor. Aceita somente requisições do tipo **POST**.
    - Também protegido por um Circuit Breaker que monitora latências altas.
 
 ### Endpoints para Simulação de Problemas
 
-1. **`/caos`**
+1. **`/dev-tools/caos`**
    - Habilita ou desabilita o "Modo Caos". Quando ativado, permite simular erros ou exceções nos endpoints principais.
 
-2. **`/latencia`**
+2. **`/dev-tools/latencia`**
    - Permite configurar a latência de resposta (em milissegundos) nos endpoints principais via uma requisição **POST** com o valor desejado no corpo da requisição.
 
 ---
@@ -51,9 +51,9 @@ O servidor utiliza a biblioteca **HttpServer** do Java e permite interações at
 
 3. **Acessar os endpoints**:
    - `/animais`: `http://localhost:8080/animais`
-   - `/hello`: `http://localhost:8080/hello`
-   - `/caos`: `http://localhost:8080/caos`
-   - `/latencia`: `http://localhost:8080/latencia`
+   - `/calculadora`: `http://localhost:8080/calculadora`
+   - `/caos`: `http://localhost:8080/dev-tools/caos`
+   - `/latencia`: `http://localhost:8080/dev-tools/latencia`
 
 ---
 
@@ -67,7 +67,7 @@ O servidor utiliza a biblioteca **HttpServer** do Java e permite interações at
 ### Handlers de Endpoints
 
 - **`GeradorAnimalHandler`**: Gera combinações de nomes de animais com adjetivos.
-- **`HelloWorldHandler`**: Responde com a mensagem "Hello world!".
+- **`CalculadoraComplexaHandler`**: Responde com a soma de dois valores inteiros enviados no corpo da requisição.
 - **`CaosHandler`**: Habilita ou desabilita o "Modo Caos".
 - **`LatenciaHandler`**: Permite configurar a latência simulada nos endpoints principais.
 
@@ -80,18 +80,18 @@ O servidor utiliza a biblioteca **HttpServer** do Java e permite interações at
 ## Simulações e Testes
 
 1. **Simular Erros nos Endpoints**:
-   - Ativar o modo caos: `curl http://localhost:8080/caos`
+   - Ativar o modo caos: `curl http://localhost:8080/dev-tools/caos`
    - Realizar requisições para `/animais` e observar os erros gerados.
 
 2. **Ajustar a Latência**:
    - Configurar latência com um POST:
      ```bash
-     curl -X POST -d "2000" http://localhost:8080/latencia
+     curl -X POST -d "2000" http://localhost:8080/dev-tools/latencia
      ```
-   - Realizar requisições para `/hello` e observar o aumento no tempo de resposta.
+   - Realizar requisições para `/calculadora` e observar o aumento no tempo de resposta.
 
 3. **Monitorar o Circuit Breaker**:
-   - Realizar múltiplas requisições para `/animais` ou `/hello` com erros ou alta latência e observar o comportamento do circuito.
+   - Realizar múltiplas requisições para `/animais` ou `/calculadora` com erros ou alta latência e observar o comportamento do circuito.
 
 ---
 
