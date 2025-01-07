@@ -4,9 +4,9 @@ import com.sun.net.httpserver.HttpServer;
 import org.example.circuitos.CircuitBreaker;
 import org.example.circuitos.schedulers.CircuitBreakerScheduler;
 import org.example.circuitos.variaveis.VariaveisDoCircuito;
-import org.example.handlers.devtools.CaosHandler;
+import org.example.handlers.CalculadoraComplexaHandler;
 import org.example.handlers.GeradorAnimalHandler;
-import org.example.handlers.HelloWorldHandler;
+import org.example.handlers.devtools.CaosHandler;
 import org.example.handlers.devtools.LatenciaHandler;
 
 import java.io.IOException;
@@ -20,15 +20,15 @@ public class ServidorPrincipal {
         VariaveisDoCircuito variaveisAnimal = new VariaveisDoCircuito(10);
         CircuitBreaker circuitoAnimal = new CircuitBreaker(new GeradorAnimalHandler(variaveisAnimal), variaveisAnimal);
 
-        VariaveisDoCircuito variaveisHW = new VariaveisDoCircuito(20);
-        CircuitBreaker circuitoHW = new CircuitBreaker(new HelloWorldHandler(variaveisHW), variaveisHW);
+        VariaveisDoCircuito variaveisCalculadora = new VariaveisDoCircuito(20);
+        CircuitBreaker circuitoCalculadora = new CircuitBreaker(new CalculadoraComplexaHandler(variaveisCalculadora), variaveisCalculadora);
 
 
         server.createContext("/animais", circuitoAnimal);
-        server.createContext("/hello", circuitoHW);
+        server.createContext("/calculadora", circuitoCalculadora);
 
-        server.createContext("/caos", new CaosHandler());
-        server.createContext("/latencia", new LatenciaHandler());
+        server.createContext("/dev-tools/caos", new CaosHandler());
+        server.createContext("/dev-tools/latencia", new LatenciaHandler());
 
         server.setExecutor(null);
         server.start();
@@ -37,13 +37,12 @@ public class ServidorPrincipal {
         CircuitBreakerScheduler schedulerAnimal = new CircuitBreakerScheduler(circuitoAnimal);
         circuitoAnimal.setCircuitBreakerListener(schedulerAnimal);
 
-        CircuitBreakerScheduler schedulerHW = new CircuitBreakerScheduler(circuitoHW);
-        circuitoHW.setCircuitBreakerListener(schedulerHW);
+        CircuitBreakerScheduler schedulerCalculadora = new CircuitBreakerScheduler(circuitoCalculadora);
+        circuitoCalculadora.setCircuitBreakerListener(schedulerCalculadora);
 
         Runtime.getRuntime().addShutdownHook(new Thread(schedulerAnimal::shutdown));
-        Runtime.getRuntime().addShutdownHook(new Thread(schedulerHW::shutdown));
+        Runtime.getRuntime().addShutdownHook(new Thread(schedulerCalculadora::shutdown));
 
         System.out.println("Servidor iniciado na porta 8080");
-
     }
 }
