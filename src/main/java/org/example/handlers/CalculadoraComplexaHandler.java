@@ -24,12 +24,7 @@ public class CalculadoraComplexaHandler implements HttpHandler {
         }
 
         long agora = System.currentTimeMillis();
-
-        try {
-            Thread.sleep(VariaveisDaAplicacao.getLatencia());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        aplicaLatencia();
 
         String response;
 
@@ -56,6 +51,15 @@ public class CalculadoraComplexaHandler implements HttpHandler {
         long depois = System.currentTimeMillis();
         if (depois - agora > 1000) {
             variaveisDoCircuito.novaMetricaDeErro();
+        }
+    }
+
+    private void aplicaLatencia() {
+
+        try {
+            Thread.sleep(VariaveisDaAplicacao.getLatencia());
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
